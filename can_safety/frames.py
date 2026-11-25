@@ -54,8 +54,9 @@ class BaseTelemetryFrame(ABC):
 
     @dtc_status.setter
     def dtc_status(self, value: int) -> None:
-        if type(value) is not int or not 0 <= value <= 0xFF:
-            raise InvalidDTCCodeError("DTC має бути 8-бітним регістром")
+        if type(value) is not int or not 0 <= value <= 0xFFFF:
+            raise InvalidDTCCodeError("DTC має бути 16-бітним регістром")
+
         if value & ~SUPPORTED_DTC_MASK:
             raise InvalidDTCCodeError(f"Невизначені біти DTC: 0x{value:02X}")
         self.__dtc_status = value
@@ -99,7 +100,7 @@ class BaseTelemetryFrame(ABC):
     def __str__(self) -> str:
         return (
             f"{self.process_signal()}: ECU=0x{self.ecu_id:03X}, "
-            f"DTC=0x{self.dtc_status:02X}, "
+            f"DTC=0x{self.dtc_status:04X}, "
             f"значення={self.measurement:.2f} {self.signal_unit}, "
             f"t={self.timestamp_ms} мс"
         )
@@ -118,6 +119,13 @@ class BaseTelemetryFrame(ABC):
         return (self.timestamp_ms, self.ecu_id) < (
             other.timestamp_ms, other.ecu_id
         )
+
+    def __add__(self, other: object) -> tuple["BaseTelemetryFrame", "BaseTelemetryFrame"]:
+        """Об'єднує два CAN-кадри в хронологічному порядку."""
+        if not isinstance(other, BaseTelemetryFrame):
+            return NotImplemented
+
+        return tuple(sorted((self, other)))
 
 
 class TractionTelemetryFrame(BaseTelemetryFrame):

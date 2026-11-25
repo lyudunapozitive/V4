@@ -1,6 +1,6 @@
 
 """
-Екзаменаційний білет № 4.
+Білет № 4.
 Автоматизована діагностика CAN-шини автономного електротранспорту.
 Головний модуль програми.
 """
@@ -128,6 +128,14 @@ def main() -> None:
         )
 
         print(f"\nДодаткова статистика: {statistics}")
+        
+        # Перевірка об'єднання CAN-кадрів через __add__
+        if len(recent) >= 2:
+            combined_frames = recent[0] + recent[1]
+            print("\nПеревірка методу __add__:")
+            for frame in combined_frames:
+                print(f"  {frame}")
+
         print(f"Звіт збережено: {report_path}")
         print(f"Журнал інцидентів: {log_path}")
 

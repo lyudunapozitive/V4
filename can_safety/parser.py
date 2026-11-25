@@ -12,7 +12,7 @@ from .frames import RawCANFrame
 # Для 11-бітного ID — три hex-цифри, для 29-бітного — вісім.
 CAN_PATTERN = re.compile(
     r"\s*(?P<ecu>0x(?:[0-9A-Fa-f]{3}|[0-9A-Fa-f]{8}))\s*\|"
-    r"\s*(?P<dtc>0x[0-9A-Fa-f]{2})\s*\|"
+    r"\s*(?P<dtc>0x[0-9A-Fa-f]{1,4})\s*\|"
     r"\s*(?P<value>[+-]?[0-9]{1,4}(?:\.[0-9]{1,2})?)\s*\|"
     r"\s*(?P<timestamp>[0-9]{1,13})\s*",
     flags=re.ASCII,
